@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SALAAR Cinematic Website</title>
+
+<link rel="preload" as="image" href="assets/first-parallax/ezgif-frame-001.jpg">
+<link rel="preload" as="image" href="assets/second-parallax/ezgif-frame-001.jpg">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:black;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* ========================= */
+/* HEADER PARALLAX */
+/* ========================= */
+
+.header-section{
+    height:600vh;
+    position:relative;
+}
+
+.header-frame{
+    position: sticky;
+    top: 0;
+
+    height: 45vh;
+    width: 50vw;
+
+    margin: 0 auto;
+
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+
+    overflow: hidden;
+}
+
+#headerCanvas{
+    width:100%;
+    height:100%;
+    background:black;
+    display:block;
+}
+
+/* ========================= */
+/* TITLE IMAGE */
+/* ========================= */
+
+header{
+    height:120vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+}
+
+header img{
+
+    width:80%;
+    max-width:1100px;
+
+    height:auto;
+
+    filter:drop-shadow(
+        0 0 35px rgba(255,255,255,0.35)
+    );
+}
+
+/* ========================= */
+/* CINEMATIC SECTION */
+/* ========================= */
+
+.cinematic-section{
+    height:220vh;
+    position:relative;
+}
+
+.frame{
+    position:sticky;
+    top:0;
+
+    width:100%;
+    height:100vh;
+
+    overflow:hidden;
+}
+
+/* CANVAS */
+
+canvas{
+
+    width:100%;
+    height:100%;
+
+    display:block;
+
+    position:absolute;
+    top:0;
+    left:0;
+
+    image-rendering:auto;
+
+    backface-visibility:hidden;
+
+    transform:translateZ(0);
+}
+
+/* COLOR */
+
+#canvasColor{
+    z-index:1;
+}
+
+/* BW */
+
+#canvasBW{
+    z-index:2;
+    filter:grayscale(1) contrast(1.4);
+}
+
+/* OVERLAY */
+
+.overlay{
+
+    position:absolute;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    z-index:3;
+
+    pointer-events:none;
+
+    background:radial-gradient(
+        ellipse at center,
+        rgba(0,0,0,0) 20%,
+        rgba(0,0,0,0.35) 55%,
+        rgba(0,0,0,0.95) 100%
+    );
+}
+
+/* ========================= */
+/* SCROLL TEXT */
+/* ========================= */
+
+.scroll-text{
+
+    position:absolute;
+
+    top:50%;
+    left:0;
+
+    width:100%;
+
+    transform:translateY(-50%);
+
+    z-index:5;
+
+    text-align:center;
+
+    pointer-events:none;
+}
+
+.scroll-text h1{
+
+    font-size:clamp(4rem, 10vw, 10rem);
+
+    font-weight:900;
+
+    letter-spacing:0.35vw;
+
+    text-transform:uppercase;
+
+    color:white;
+
+    text-shadow:
+        0 0 20px rgba(255,255,255,0.4),
+        0 0 60px rgba(255,255,255,0.2);
+
+    opacity:0;
+
+    transform:translateY(120px);
+
+    transition:
+        opacity 0.3s linear,
+        transform 0.3s linear;
+}
+
+.scroll-text p{
+
+    margin-top:25px;
+
+    font-size:1.2rem;
+
+    letter-spacing:5px;
+
+    color:#cccccc;
+
+    opacity:0;
+
+    transform:translateY(60px);
+
+    transition:
+        opacity 0.3s linear,
+        transform 0.3s linear;
+}
+
+/* ========================= */
+/* FOOTER */
+/* ========================= */
+
+.movie-footer{
+
+    min-height:100vh;
+
+    background:#0a0a0a;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:50px;
+}
+
+.movie-card{
+
+    display:flex;
+
+    gap:40px;
+
+    max-width:1200px;
+    width:100%;
+
+    background:rgba(255,255,255,0.03);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:25px;
+
+    padding:30px;
+
+    backdrop-filter:blur(10px);
+}
+
+/* POSTER */
+
+.poster img{
+
+    width:300px;
+    height:450px;
+
+    object-fit:cover;
+
+    border-radius:20px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* DETAILS */
+
+.details{
+    flex:1;
+}
+
+.details h1{
+
+    font-size:2.5rem;
+
+    color:#ffd700;
+
+    margin-bottom:10px;
+}
+
+.tagline{
+
+    color:#4da3ff;
+
+    font-style:italic;
+
+    margin-bottom:20px;
+
+    text-align:center;
+}
+
+/* TAGS */
+
+.tags,
+.languages{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin-bottom:20px;
+}
+
+.tags span,
+.languages span{
+
+    background:rgba(255,255,255,0.08);
+
+    padding:8px 12px;
+
+    border-radius:12px;
+
+    font-size:0.9rem;
+}
+
+/* RATING */
+
+.rating-box{
+
+    margin-top:30px;
+
+    padding:20px;
+
+    background:rgba(255,215,0,0.08);
+
+    border:1px solid rgba(255,215,0,0.3);
+
+    border-radius:20px;
+
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.score{
+
+    font-size:3rem;
+
+    font-weight:bold;
+
+    color:#ffd700;
+}
+
+.score small{
+    font-size:1rem;
+    color:white;
+}
+
+.stars{
+    color:#ffd700;
+    letter-spacing:2px;
+}
+
+.label{
+    margin-left:auto;
+    opacity:0.7;
+}
+
+/* ========================= */
+/* CREDIT */
+/* ========================= */
+
+.creator-credit{
+
+    width:100%;
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:black;
+
+    border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.creator-credit h2{
+
+    font-size:1rem;
+
+    font-weight:700;
+
+    letter-spacing:4px;
+
+    text-transform:uppercase;
+
+    color:white;
+
+    opacity:0.8;
+
+    transition:0.4s ease;
+}
+
+.creator-credit h2:hover{
+
+    opacity:1;
+
+    letter-spacing:6px;
+
+    text-shadow:
+        0 0 12px rgba(255,255,255,0.5);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .movie-card{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+    }
+
+    .poster img{
+        width:250px;
+        height:380px;
+    }
+
+    .rating-box{
+        flex-direction:column;
+    }
+
+    .scroll-text h1{
+        font-size:18vw;
+        letter-spacing:2px;
+    }
+
+    .scroll-text p{
+        font-size:0.9rem;
+        letter-spacing:2px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER PARALLAX -->
+
+<section class="header-section">
+
+    <div class="header-frame">
+        <canvas id="headerCanvas"></canvas>
+    </div>
+
+</section>
+
+<!-- TITLE -->
+
+<header>
+
+    <img src="assets/title.png" alt="SALAAR">
+
+</header>
+
+<!-- MAIN CINEMATIC -->
+
+<section class="cinematic-section">
+
+    <div class="frame">
+
+        <!-- COLOR -->
+        <canvas id="canvasColor"></canvas>
+
+        <!-- BW -->
+        <canvas id="canvasBW"></canvas>
+
+        <!-- OVERLAY -->
+        <div class="overlay"></div>
+
+        <!-- TEXT -->
+        <div class="scroll-text">
+
+            <h1 id="mainTitle">
+                SALAAR
+            </h1>
+
+            <p id="subTitle">
+                THE MOST VIOLENT MEN...
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer class="movie-footer">
+
+    <div class="movie-card">
+
+        <div class="poster">
+
+            <img src="assets/poster.png" alt="Poster">
+
+        </div>
+
+        <div class="details">
+
+            <h1>Salaar Part 1 - Ceasefire</h1>
+
+            <h3 class="tagline">
+                The Most Violent Men
+            </h3>
+
+            <div class="tags">
+
+                <span>📅 2023</span>
+                <span>⏱ 2h 55m</span>
+                <span>🎭 Action, Crime, Drama</span>
+
+            </div>
+
+            <div class="languages">
+
+                <span>Telugu</span>
+                <span>Hindi</span>
+                <span>Tamil</span>
+                <span>Kannada</span>
+
+            </div>
+
+            <div class="rating-box">
+
+                <div class="score">
+                    6.6 <small>/10</small>
+                </div>
+
+                <div class="stars">
+                    ★★★★★★★☆☆☆
+                </div>
+
+                <div class="label">
+                    IMDb Rating
+                </div>
+
+            </div>
+
+            <br>
+
+            <div>
+                <p>
+                    Salaar: Part 1 – Ceasefire (2023) is a violent action-drama set in the fictional, dystopian city-state of Khansaar. It follows the intense friendship between Deva (Prabhas), an incredibly strong warrior, and Varadha (Prithviraj), the prince of Khansaar. When a coup threatens Varadha’s throne, he summons his loyal childhood friend, Deva, who unleashes brutal violence to help him secure power.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<!-- CREDIT -->
+
+<div class="creator-credit">
+
+    <h2>
+        Made By nikhil_codes
+    </h2>
+
+</div>
+
+<script>
+
+/////////////////////////////////////////////////////////
+// HEADER PARALLAX
+/////////////////////////////////////////////////////////
+
+const headerFrames = 267;
+
+const headerPath = i =>
+`assets/first-parallax/ezgif-frame-${String(i + 1).padStart(3,'0')}.jpg`;
+
+const headerCanvas =
+document.getElementById("headerCanvas");
+
+const hctx =
+headerCanvas.getContext("2d");
+
+function resizeHeader(){
+
+    headerCanvas.width = window.innerWidth;
+    headerCanvas.height = window.innerHeight;
+
+}
+
+resizeHeader();
+
+const headerImages = [];
+
+let hTarget = 0;
+let hCurrent = 0;
+
+/* PRELOAD */
+
+for(let i=0;i<headerFrames;i++){
+
+    const img = new Image();
+
+    img.loading = "eager";
+    img.decoding = "async";
+
+    img.src = headerPath(i);
+
+    headerImages.push(img);
+
+}
+
+/* DRAW */
+
+function drawHeader(index){
+
+    const img = headerImages[index];
+
+    if(!img || !img.complete) return;
+
+    hctx.clearRect(
+        0,
+        0,
+        headerCanvas.width,
+        headerCanvas.height
+    );
+
+    const ratio =
+    img.width / img.height;
+
+    const canvasRatio =
+    headerCanvas.width /
+    headerCanvas.height;
+
+    let w,h;
+
+    if(canvasRatio > ratio){
+
+        h = headerCanvas.height;
+        w = h * ratio;
+
+    }else{
+
+        w = headerCanvas.width;
+        h = w / ratio;
+
+    }
+
+    const x =
+    (headerCanvas.width - w)/2;
+
+    const y =
+    (headerCanvas.height - h)/2;
+
+    hctx.drawImage(img,x,y,w,h);
+
+}
+
+/* SCROLL */
+
+window.addEventListener("scroll",()=>{
+
+    const progress =
+    window.scrollY /
+    (document.body.scrollHeight - window.innerHeight);
+
+    hTarget =
+    progress * (headerFrames - 1);
+
+});
+
+/* ANIMATE */
+
+function headerAnimate(){
+
+    hCurrent +=
+    (hTarget - hCurrent) * 0.08;
+
+    drawHeader(Math.round(hCurrent));
+
+    requestAnimationFrame(headerAnimate);
+
+}
+
+headerAnimate();
+
+/////////////////////////////////////////////////////////
+// SECOND PARALLAX
+/////////////////////////////////////////////////////////
+
+const frameCount = 165;
+
+const framePath = i =>
+`assets/second-parallax/ezgif-frame-${String(i + 1).padStart(3,'0')}.jpg`;
+
+const canvasColor =
+document.getElementById("canvasColor");
+
+const ctxColor =
+canvasColor.getContext("2d");
+
+const canvasBW =
+document.getElementById("canvasBW");
+
+const ctxBW =
+canvasBW.getContext("2d");
+
+function resize(){
+
+    canvasColor.width =
+    canvasBW.width =
+    window.innerWidth;
+
+    canvasColor.height =
+    canvasBW.height =
+    window.innerHeight;
+
+}
+
+resize();
+
+const images = [];
+
+/* PRELOAD */
+
+for(let i=0;i<frameCount;i++){
+
+    const img = new Image();
+
+    img.loading = "eager";
+    img.decoding = "async";
+
+    img.src = framePath(i);
+
+    images.push(img);
+
+}
+
+/* DRAW */
+
+function draw(index){
+
+    const img = images[index];
+
+    if(!img || !img.complete) return;
+
+    ctxColor.clearRect(
+        0,
+        0,
+        canvasColor.width,
+        canvasColor.height
+    );
+
+    ctxBW.clearRect(
+        0,
+        0,
+        canvasBW.width,
+        canvasBW.height
+    );
+
+    const ratio =
+    img.width / img.height;
+
+    const canvasRatio =
+    canvasColor.width /
+    canvasColor.height;
+
+    let w,h;
+
+    if(canvasRatio > ratio){
+
+        h = canvasColor.height;
+        w = h * ratio;
+
+    }else{
+
+        w = canvasColor.width;
+        h = w / ratio;
+
+    }
+
+    const x =
+    (canvasColor.width - w)/2;
+
+    const y =
+    (canvasColor.height - h)/2;
+
+    ctxColor.drawImage(img,x,y,w,h);
+    ctxBW.drawImage(img,x,y,w,h);
+
+}
+
+const section =
+document.querySelector(".cinematic-section");
+
+let target = 0;
+let current = 0;
+
+window.addEventListener("scroll",()=>{
+
+    const rect =
+    section.getBoundingClientRect();
+
+    const progress = Math.min(
+        Math.max(
+            (window.innerHeight - rect.top) /
+            (window.innerHeight + rect.height),
+        0),
+    1);
+
+    target =
+    progress * (frameCount - 1);
+
+    /////////////////////////////////////////////////////////
+    // TEXT ANIMATION
+    /////////////////////////////////////////////////////////
+
+    const title =
+    document.getElementById("mainTitle");
+
+    const subtitle =
+    document.getElementById("subTitle");
+
+    title.style.opacity =
+    Math.min(progress * 2,1);
+
+    subtitle.style.opacity =
+    Math.min((progress * 2)-0.3,1);
+
+    title.style.transform =
+    `translateY(${120 - (progress * 120)}px)`;
+
+    subtitle.style.transform =
+    `translateY(${60 - (progress * 60)}px)`;
+
+});
+
+/* ANIMATE */
+
+function animate(){
+
+    current +=
+    (target - current) * 0.08;
+
+    draw(Math.round(current));
+
+    requestAnimationFrame(animate);
+
+}
+
+animate();
+
+/* RESIZE */
+
+window.addEventListener("resize",resize);
+window.addEventListener("resize",resizeHeader);
+
+</script>
+
+</body>
+</html>
